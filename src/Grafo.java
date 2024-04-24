@@ -3,12 +3,12 @@ import java.util.LinkedList;
 
 public class Grafo {
 
-    private int tamanho;
+    private final int tamanho;
 
-    private int[][] matriz;
+    private final int[][] matriz;
 
-    private ArrayList<Aresta> arestas;
-    private ArrayList<LinkedList<Adjacencia>> adjacencias;
+    private final ArrayList<Aresta> arestas;
+    private final ArrayList<LinkedList<Adjacencia>> adjacencias;
 
     public Grafo(int tamanho, int[][] matriz) {
         this.tamanho = tamanho;
@@ -16,10 +16,6 @@ public class Grafo {
         this.arestas = new ArrayList<>();
         this.adjacencias = new ArrayList<>();
         makeEdges();
-    }
-
-    public void addAresta(int i, int j, int con){
-        matriz[i][j] = con;
     }
 
     public boolean isDirected() {
@@ -52,35 +48,38 @@ public class Grafo {
 
         boolean[] visited = new boolean[tamanho];
 
-        int startNode = 0;
-        while (startNode < tamanho && adjacencias.get(startNode).isEmpty()) {
-            startNode++;
+        int i;
+        for (i = 0; i < tamanho; i++) {
+            if (!adjacencias.get(i).isEmpty()) {
+                break;
+            }
         }
-        if (startNode == tamanho) return true;
 
-        DFS(startNode, visited, -1);
-        for (int i = 0; i < tamanho; i++) {
+        if (i == tamanho) {
+            return true;
+        }
+
+        DFS(i, visited);
+
+        for (i = 0; i < tamanho; i++) {
             if (!visited[i] && !adjacencias.get(i).isEmpty()) {
                 return false;
             }
         }
+
         return true;
 
     }
 
-    public boolean DFS(int v, boolean[] visited, int parent) {
+    public void DFS(int v, boolean[] visited) {
 
         visited[v] = true;
-        boolean hasCycle = false;
 
         for (Adjacencia n : adjacencias.get(v)) {
-            if (!visited[n.num]) {
-                hasCycle = hasCycle || DFS(n.num, visited, v);
-            } else if (n.num != parent) {
-                return true;
+            if (!visited[n.getNum()]) {
+                DFS(n.getNum(), visited);
             }
         }
-        return hasCycle;
     }
 
     public boolean isCyclic(){
@@ -88,13 +87,28 @@ public class Grafo {
         boolean[] visited = new boolean[tamanho];
         for (int i = 0; i < tamanho; i++) {
             if (!visited[i]) {
-                if (DFS(i, visited, -1)) {
+                if (DFSCiclo(i, visited, -1)) {
                     return true;
                 }
             }
         }
         return false;
 
+    }
+
+    boolean DFSCiclo(int v, boolean[] visited, int parent) {
+        visited[v] = true;
+
+        for (Adjacencia n : adjacencias.get(v)) {
+            if (!visited[n.getNum()]) {
+                if (DFSCiclo(n.getNum(), visited, v))
+                    return true;
+            }
+
+            else if (n.getNum() != parent)
+                return true;
+        }
+        return false;
     }
 
     private void makeEdges(){
@@ -109,25 +123,13 @@ public class Grafo {
         }
     }
 
-    public ArrayList<Aresta> getArestas() {
-        return arestas;
-    }
-
-    public ArrayList<LinkedList<Adjacencia>> getAdjacencias() {
-        return adjacencias;
-    }
-
-    public int getTamanho() {
-        return tamanho;
-    }
-
     public void printListaDeAdjacencias(){
         System.out.println("Lista de Adjacências:");
         for (int i = 0; i < adjacencias.size(); i++) {
             System.out.print(i + ": ");
             LinkedList<Adjacencia> lista = adjacencias.get(i);
             for (Adjacencia adj : lista) {
-                System.out.print(adj.num + " -> ");
+                System.out.print(adj.getNum() + " -> ");
             }
             System.out.println("null");
         }

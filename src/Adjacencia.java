@@ -1,6 +1,6 @@
 public class Adjacencia {
 
-    int num;
+    private int num;
 
     public Adjacencia(int num) {
         this.num = num;

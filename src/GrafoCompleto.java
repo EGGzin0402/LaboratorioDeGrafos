@@ -54,7 +54,7 @@ public class GrafoCompleto {
 
             LinkedList<Adjacencia> lista = adjacencias.get(i);
             for (Adjacencia adj : lista) {
-                System.out.print(adj.num + " -> ");
+                System.out.print(adj.getNum() + " -> ");
             }
             System.out.println("null");
         }

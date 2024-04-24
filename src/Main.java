@@ -14,7 +14,7 @@ public class Main {
 
         grafo.printArestas();
 
-        System.out.println("É direcionado: " + (grafo.isConnected() ? "Sim" : "Não"));
+        System.out.println("É direcionado: " + (grafo.isDirected() ? "Sim" : "Não"));
         System.out.println("É conexo: "+ (grafo.isConnected() ? "Sim" : "Não"));
         System.out.println("É cíclico: "+ (grafo.isCyclic() ? "Sim" : "Não"));
 
